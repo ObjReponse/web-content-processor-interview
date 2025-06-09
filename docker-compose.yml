@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web-processor:
+    build: .
+    container_name: web-content-processor
+    environment:
+      - GO_ENV=production
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # Redis для кэширования (опционально)
+  redis:
+    image: redis:7-alpine
+    container_name: web-processor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:

@@ -1,0 +1,33 @@
+name: Template Cleanup
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  template-cleanup:
+    if: github.repository != 'ObjReponse/web-content-processor-interview'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cleanup template
+        run: |
+          # Получаем имя репозитория
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          
+          # Обновляем go.mod с правильным module path
+          sed -i "s|github.com/ObjReponse/web-content-processor-interview|github.com/${GITHUB_REPOSITORY}|g" go.mod
+          
+          # Обновляем импорты в main.go
+          sed -i "s|github.com/ObjReponse/web-content-processor-interview/processor|github.com/${GITHUB_REPOSITORY}/processor|g" main.go
+          
+          # Удаляем файл template cleanup
+          rm -f .github/template-cleanup.yml
+          
+          # Коммитим изменения
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Initialize repository from template" || exit 0
+          git push
