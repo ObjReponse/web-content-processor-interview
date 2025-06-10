@@ -5,6 +5,10 @@ GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
 
+## Настройка репозитория (только для новых fork'ов)
+setup:
+	bash ./scripts/setup.sh
+
 ## Помощь
 help:
 	@echo "$(GREEN)🚀 Web Content Processor Interview$(RESET)"
